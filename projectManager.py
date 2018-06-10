@@ -15,7 +15,7 @@ except ImportError:
     from shiboken import wrapInstance
 
 __title__ = 'Project Manager'
-__version__ = 'v1.0.1'
+__version__ = 'v1.0.0'
 mainWindow = None
 rootDir = 'D:\Projects'
 
