@@ -298,10 +298,3 @@ def run():
     if not mainWindow or not cmds.window(mainWindow,q=True,e=True):
         mainWindow = projectManager(parent=getMainWindow())
     mainWindow.show()
-
-
-
-
-
-
-
