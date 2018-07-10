@@ -14,19 +14,32 @@ except ImportError:
     from PySide import QtCore, QtGui, QtWidgets
     from shiboken import wrapInstance
 
-__title__ = 'Project Manager'
-__version__ = 'v1.0.0'
 mainWindow = None
+__title__ = 'Project Manager'
+__version__ = 'v1.0.1'
+
 rootDir = 'D:\Projects'
 
 print ' '
 print ' > You have openned {} {} successfully.'.format(__title__,__version__)
 print ' '
-print '   > Project: ' + os.getenv('PRJ')
-print '   > Departament: ' + os.getenv('DPT')
-print '   > Type: ' + os.getenv('TYP')
-print '   > Asset: ' + os.getenv('AST')
-print ' '
+
+try:
+    print '   > Project: ' + os.getenv('PRJ')
+    print '   > Departament: ' + os.getenv('DPT')
+    print '   > Type: ' + os.getenv('TYP')
+    print '   > Asset: ' + os.getenv('AST')
+    print ' '
+except TypeError:
+    os.environ['PRJ'] = 'None'
+    os.environ['DPT'] = 'None'
+    os.environ['TYP'] = 'None'
+    os.environ['AST'] = 'None'
+    print '   > Project: ' + os.getenv('PRJ')
+    print '   > Departament: ' + os.getenv('DPT')
+    print '   > Type: ' + os.getenv('TYP')
+    print '   > Asset: ' + os.getenv('AST')
+    print ' '
 
 def getMainWindow():
     omui.MQtUtil.mainWindow()
@@ -40,8 +53,8 @@ class projectManager(QtWidgets.QDialog):
 
         self.setWindowTitle('{} {}'.format(__title__, __version__))
         self.setWindowFlags(QtCore.Qt.Dialog)
-        self.setMinimumWidth(575)
-        self.setMinimumHeight(325)
+        self.setMinimumWidth(640)
+        self.setMinimumHeight(425)
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
         self.createProjectUI()
@@ -49,7 +62,6 @@ class projectManager(QtWidgets.QDialog):
     def rootDir(self):
         global rootDir
         return rootDir
-
 
     def getProjects(self):
         projectDir = self.rootDir()
@@ -76,18 +88,19 @@ class projectManager(QtWidgets.QDialog):
         projectLy = QtWidgets.QHBoxLayout()
         self.projectCb = QtWidgets.QComboBox()
         self.projectCb.addItems(projects)
+        self.projectCb.setCurrentText(os.getenv('PRJ'))
 
         assetsLy = QtWidgets.QHBoxLayout()
         self.departamentCb = QtWidgets.QComboBox()
-        self.departamentCb.setMinimumWidth(150)
+        self.departamentCb.setMinimumWidth(210)
         self.departamentCb.addItems([])
 
         self.typesCb = QtWidgets.QComboBox()
-        self.typesCb.setMinimumWidth(150)
+        self.typesCb.setMinimumWidth(210)
         self.typesCb.addItems([])
 
         self.assetCb = QtWidgets.QComboBox()
-        self.assetCb.setMinimumWidth(150)
+        self.assetCb.setMinimumWidth(210)
         self.assetCb.addItems([])
 
         filesLy = QtWidgets.QVBoxLayout()
@@ -95,7 +108,7 @@ class projectManager(QtWidgets.QDialog):
         self.filesTableWidget.horizontalHeader().setVisible(True)
         self.filesTableWidget.verticalHeader().setVisible(False)
         self.filesTableWidget.setColumnCount(3)
-        self.filesTableWidget.setColumnWidth(0, 305)
+        self.filesTableWidget.setColumnWidth(0, 375)
         self.filesTableWidget.setColumnWidth(1, 100)
         self.filesTableWidget.setColumnWidth(2, 140)
         self.filesTableWidget.setHorizontalHeaderLabels(['Name', 'Type', 'Date'])
@@ -118,97 +131,145 @@ class projectManager(QtWidgets.QDialog):
         self.setLayout(mainLayout)
         self.setProjectUI()
 
-
     def setProjectUI(self):
-        os.environ['PRJ'] = self.projectCb.currentText()
-        self.projectCb.currentTextChanged.connect(self.updateProjectUI)
-        self.setDepartamentUI()
-
+        if os.getenv('PRJ') == 'None':
+            os.environ['PRJ'] = self.projectCb.currentText()
+            self.projectCb.currentTextChanged.connect(self.updateProjectUI)
+            self.setDepartamentUI()
+        else:
+            self.projectCb.currentTextChanged.connect(self.updateProjectUI)
+            self.setDepartamentUI()
 
     def updateProjectUI(self):
         os.environ['PRJ'] = self.projectCb.currentText()
         self.setDepartamentUI()
 
-
     def setDepartamentUI(self):
-        self.departamentCb.clear()
-        project = os.path.join(self.rootDir(), os.getenv('PRJ'))
-        departaments = []
+        if os.getenv('DPT') == 'None':
+            self.departamentCb.clear()
+            project = os.path.join(self.rootDir(), os.getenv('PRJ'))
+            departaments = []
 
-        for i in os.listdir(project):
-            path = os.path.join(project, i)
-            if os.path.isdir(path):
-                departaments.append(i)
+            for i in os.listdir(project):
+                path = os.path.join(project, i)
+                if os.path.isdir(path):
+                    departaments.append(i)
 
-        self.departamentCb.addItems(departaments)
-        os.environ['DPT'] = self.departamentCb.currentText()
+            self.departamentCb.addItems(departaments)
+            os.environ['DPT'] = self.departamentCb.currentText()
 
-        self.departamentCb.currentTextChanged.connect(self.updateDepartamentUI)
-        self.setTypeUI()
+            self.departamentCb.currentTextChanged.connect(self.updateDepartamentUI)
+            self.setTypeUI()
+        else:
+            self.departamentCb.clear()
+            project = os.path.join(self.rootDir(), os.getenv('PRJ'))
+            departaments = []
 
+            for i in os.listdir(project):
+                path = os.path.join(project, i)
+                if os.path.isdir(path):
+                    departaments.append(i)
+
+            self.departamentCb.addItems(departaments)
+            self.departamentCb.setCurrentText(os.getenv('DPT'))
+            os.environ['DPT'] = self.departamentCb.currentText()
+
+            self.departamentCb.currentTextChanged.connect(self.updateDepartamentUI)
+            self.setTypeUI()
 
     def updateDepartamentUI(self):
         os.environ['DPT'] = self.departamentCb.currentText()
         self.setTypeUI()
 
-
     def setTypeUI(self):
-        self.typesCb.clear()
-        departament = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'))
-        types = []
+        if os.getenv('TYP') == 'None':
+            self.typesCb.clear()
+            departament = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'))
+            types = []
 
-        for i in os.listdir(departament):
-            path = os.path.join(departament, i)
-            if os.path.isdir(path):
-                types.append(i)
+            for i in os.listdir(departament):
+                path = os.path.join(departament, i)
+                if os.path.isdir(path):
+                    types.append(i)
 
-        self.typesCb.addItems(types)
-        os.environ['TYP'] = self.typesCb.currentText()
+            self.typesCb.addItems(types)
+            os.environ['TYP'] = self.typesCb.currentText()
 
-        self.typesCb.currentTextChanged.connect(self.updateTypeUI)
-        self.setAssetUI()
+            self.typesCb.currentTextChanged.connect(self.updateTypeUI)
+            self.setAssetUI()
+        else:
+            self.typesCb.clear()
+            departament = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'))
+            types = []
 
+            for i in os.listdir(departament):
+                path = os.path.join(departament, i)
+                if os.path.isdir(path):
+                    types.append(i)
+
+            self.typesCb.addItems(types)
+            self.typesCb.setCurrentText(os.getenv('TYP'))
+            os.environ['TYP'] = self.typesCb.currentText()
+
+            self.typesCb.currentTextChanged.connect(self.updateTypeUI)
+            self.setAssetUI()
 
     def updateTypeUI(self):
         os.environ['TYP'] = self.typesCb.currentText()
         self.setAssetUI()
 
-
     def setAssetUI(self):
-        self.assetCb.clear()
-        type = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'))
-        assets = []
+        if os.getenv('AST') == 'None':
+            self.assetCb.clear()
+            type = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'))
+            assets = []
 
-        for i in os.listdir(type):
-            path = os.path.join(type, i)
-            if os.path.isdir(path):
-                assets.append(i)
+            for i in os.listdir(type):
+                path = os.path.join(type, i)
+                if os.path.isdir(path):
+                    assets.append(i)
 
-        self.assetCb.addItems(assets)
-        os.environ['AST'] = self.assetCb.currentText()
+            self.assetCb.addItems(assets)
+            os.environ['AST'] = self.assetCb.currentText()
 
-        workspaceFolder = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'), os.getenv('AST'))
-        normalizedPath = workspaceFolder.replace('\\', '/')
-        mel.eval('setProject \"' + normalizedPath + '\"')
+            workspaceFolder = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'), os.getenv('AST'))
+            normalizedPath = workspaceFolder.replace('\\', '/')
+            mel.eval('setProject \"' + normalizedPath + '\"')
 
-        self.assetCb.currentTextChanged.connect(self.updateAssetUI)
-        self.populate()
+            self.assetCb.currentTextChanged.connect(self.updateAssetUI)
+            self.populate()
+        else:
+            self.assetCb.clear()
+            type = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'))
+            assets = []
 
+            for i in os.listdir(type):
+                path = os.path.join(type, i)
+                if os.path.isdir(path):
+                    assets.append(i)
+
+            self.assetCb.addItems(assets)
+            self.assetCb.setCurrentText(os.getenv('AST'))
+            os.environ['AST'] = self.assetCb.currentText()
+
+            workspaceFolder = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'), os.getenv('AST'))
+            normalizedPath = workspaceFolder.replace('\\', '/')
+            mel.eval('setProject \"' + normalizedPath + '\"')
+
+            self.assetCb.currentTextChanged.connect(self.updateAssetUI)
+            self.populate()
 
     def updateAssetUI(self):
         os.environ['AST'] = self.assetCb.currentText()
         self.populate()
 
-
     def getVersionDir(self):
         versionDir = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'), os.getenv('AST'),'version')
         return versionDir
 
-
     def getMayaFiles(self):
         mayaFiles = glob(os.path.join(self.getVersionDir(), '*.ma'))
         return mayaFiles
-
 
     def populate(self):
         self.filesTableWidget.clearContents()
@@ -239,14 +300,12 @@ class projectManager(QtWidgets.QDialog):
 
         self.filesTableWidget.itemDoubleClicked.connect(self.checkFileState)
 
-
     def checkFileState(self):
         fileState = cmds.file(q=True, mf=True)
         if fileState == True:
             self.warningBoxUI()
         else:
             self.openScene()
-
 
     def warningBoxUI(self):
         warningBox = QtWidgets.QMessageBox()
@@ -266,32 +325,29 @@ class projectManager(QtWidgets.QDialog):
         elif warning == warningCancelBtn:
             self.cancel()
 
-
     def openScene(self):
-        global mainWindow
         currentScene = self.filesTableWidget.currentItem()
         getFileName = currentScene.text()
         sceneName = getFileName + '.ma'
-        cmds.file(sceneName, o=True, f=True)
+        cmds.file(sceneName, f=True, o=True)
         print ' '
         print ' > You have opened your scene successfully.'
-        mainWindow.close()
-
+        print ' '
+        self.close()
 
     def saveScene(self):
-        global mainWindow
         cmds.file(s=True, f=True)
         self.openScene()
         print ' '
         print ' > You have discard to save your scene successfully.'
-        mainWindow.close()
-
+        print ' '
+        self.close()
 
     def cancel(self):
-        global mainWindow
         print ' '
         print ' > You have canceled the process successfully.'
-        mainWindow.close()
+        print ' '
+        self.close()
 
 def run():
     global mainWindow
