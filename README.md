@@ -1,11 +1,11 @@
 # Project Manager v1.0.0
-Tested in Maya 2018
+  <i>Tested in Maya 2018</i>
 
-I started this project from the previously tool I have share AMN, same idea different software, how to manage your files in a easy way.
+  I started this project from the previously tool I have share AMN, same idea different software, how to manage your files in a easy way.
 
-To work with this tool, you need to have in mind that only works with the same folder hierarchy I use to.
+  To work with this tool, you need to have in mind that only works with the same folder hierarchy I use to.
 
-Firstly, yo need to redirect my rootDir with yours, line 20 (rootDir = 'Your projects root'), then, you need to have in mind the next folder hierarchy:
+  Firstly, yo need to redirect my rootDir with yours, line 20 (rootDir = 'Your projects root'), then, you need to have in mind the next folder hierarchy:
 
     --+ rootDir (D:\Projects))
       |
