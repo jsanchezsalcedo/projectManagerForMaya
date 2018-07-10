@@ -16,7 +16,7 @@ except ImportError:
 
 mainWindow = None
 __title__ = 'Project Manager'
-__version__ = 'v1.1.1'
+__version__ = 'v1.0.1'
 
 rootDir = 'D:\Projects'
 
