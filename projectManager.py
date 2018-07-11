@@ -16,7 +16,7 @@ except ImportError:
 
 mainWindow = None
 __title__ = 'Project Manager'
-__version__ = 'v1.0.1'
+__version__ = 'v1.1.1'
 
 rootDir = 'D:\Projects'
 
@@ -145,6 +145,7 @@ class projectManager(QtWidgets.QDialog):
         self.setDepartamentUI()
 
     def setDepartamentUI(self):
+
         if os.getenv('DPT') == 'None':
             self.departamentCb.clear()
             project = os.path.join(self.rootDir(), os.getenv('PRJ'))
@@ -329,7 +330,7 @@ class projectManager(QtWidgets.QDialog):
         currentScene = self.filesTableWidget.currentItem()
         getFileName = currentScene.text()
         sceneName = getFileName + '.ma'
-        cmds.file(sceneName, f=True, o=True)
+        cmds.file(sceneName, o=True, f=True)
         print ' '
         print ' > You have opened your scene successfully.'
         print ' '
