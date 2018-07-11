@@ -219,7 +219,6 @@ class projectManager(QtWidgets.QDialog):
     def setAssetUI(self):
         assets = self.getAssetUI()
         self.assetCb.addItems(assets)
-        print ' > Set asset to: ' + os.getenv('AST')
 
         if os.getenv('AST') == 'None':
             os.environ['AST'] = self.assetCb.currentText()
@@ -245,7 +244,6 @@ class projectManager(QtWidgets.QDialog):
 
     def updateAssetUI(self):
         os.environ['AST'] = self.assetCb.currentText()
-        print ' > Updated asset to: ' + os.getenv('AST')
 
         workspaceFolder = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'),
                                        os.getenv('AST'))
@@ -268,7 +266,6 @@ class projectManager(QtWidgets.QDialog):
         mayaFiles = self.getMayaFiles()
 
         for i in mayaFiles:
-            print i
             file = i.split('\\')[-1]
             name, ext = os.path.splitext(file)
 
