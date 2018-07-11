@@ -66,6 +66,7 @@ class projectManager(QtWidgets.QDialog):
     def getProjects(self):
         projectDir = self.rootDir()
         projects = []
+
         for i in os.listdir(projectDir):
             path = os.path.join(projectDir, i)
             if os.path.isdir(path):
@@ -134,142 +135,132 @@ class projectManager(QtWidgets.QDialog):
     def setProjectUI(self):
         if os.getenv('PRJ') == 'None':
             os.environ['PRJ'] = self.projectCb.currentText()
-            self.projectCb.currentTextChanged.connect(self.updateProjectUI)
             self.setDepartamentUI()
         else:
-            self.projectCb.currentTextChanged.connect(self.updateProjectUI)
+            self.projectCb.setCurrentText(os.getenv('PRJ'))
             self.setDepartamentUI()
+
+        self.projectCb.currentTextChanged.connect(self.updateProjectUI)
 
     def updateProjectUI(self):
         os.environ['PRJ'] = self.projectCb.currentText()
         self.setDepartamentUI()
 
+    def getDepartamentUI(self):
+        self.departamentCb.clear()
+        project = os.path.join(self.rootDir(), os.getenv('PRJ'))
+        departaments = []
+
+        for i in os.listdir(project):
+            path = os.path.join(project, i)
+            if os.path.isdir(path):
+                departaments.append(i)
+
+        return departaments
+
     def setDepartamentUI(self):
+        departaments= self.getDepartamentUI()
+        self.departamentCb.addItems(departaments)
 
         if os.getenv('DPT') == 'None':
-            self.departamentCb.clear()
-            project = os.path.join(self.rootDir(), os.getenv('PRJ'))
-            departaments = []
-
-            for i in os.listdir(project):
-                path = os.path.join(project, i)
-                if os.path.isdir(path):
-                    departaments.append(i)
-
-            self.departamentCb.addItems(departaments)
             os.environ['DPT'] = self.departamentCb.currentText()
-
-            self.departamentCb.currentTextChanged.connect(self.updateDepartamentUI)
             self.setTypeUI()
         else:
-            self.departamentCb.clear()
-            project = os.path.join(self.rootDir(), os.getenv('PRJ'))
-            departaments = []
-
-            for i in os.listdir(project):
-                path = os.path.join(project, i)
-                if os.path.isdir(path):
-                    departaments.append(i)
-
-            self.departamentCb.addItems(departaments)
             self.departamentCb.setCurrentText(os.getenv('DPT'))
-            os.environ['DPT'] = self.departamentCb.currentText()
-
-            self.departamentCb.currentTextChanged.connect(self.updateDepartamentUI)
             self.setTypeUI()
+
+        self.departamentCb.currentTextChanged.connect(self.updateDepartamentUI)
 
     def updateDepartamentUI(self):
         os.environ['DPT'] = self.departamentCb.currentText()
         self.setTypeUI()
 
+    def getTypeUI(self):
+        self.typesCb.clear()
+        departament = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'))
+        types = []
+
+        for i in os.listdir(departament):
+            path = os.path.join(departament, i)
+            if os.path.isdir(path):
+                types.append(i)
+
+        return types
+
     def setTypeUI(self):
+        types = self.getTypeUI()
+        self.typesCb.addItems(types)
+
         if os.getenv('TYP') == 'None':
-            self.typesCb.clear()
-            departament = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'))
-            types = []
-
-            for i in os.listdir(departament):
-                path = os.path.join(departament, i)
-                if os.path.isdir(path):
-                    types.append(i)
-
-            self.typesCb.addItems(types)
             os.environ['TYP'] = self.typesCb.currentText()
-
-            self.typesCb.currentTextChanged.connect(self.updateTypeUI)
             self.setAssetUI()
         else:
-            self.typesCb.clear()
-            departament = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'))
-            types = []
-
-            for i in os.listdir(departament):
-                path = os.path.join(departament, i)
-                if os.path.isdir(path):
-                    types.append(i)
-
-            self.typesCb.addItems(types)
             self.typesCb.setCurrentText(os.getenv('TYP'))
-            os.environ['TYP'] = self.typesCb.currentText()
-
-            self.typesCb.currentTextChanged.connect(self.updateTypeUI)
             self.setAssetUI()
+
+        self.typesCb.currentTextChanged.connect(self.updateTypeUI)
 
     def updateTypeUI(self):
         os.environ['TYP'] = self.typesCb.currentText()
         self.setAssetUI()
 
+    def getAssetUI(self):
+        self.assetCb.clear()
+        type = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'))
+        assets = []
+
+        for i in os.listdir(type):
+            path = os.path.join(type, i)
+            if os.path.isdir(path):
+                assets.append(i)
+
+        return assets
+
     def setAssetUI(self):
+        assets = self.getAssetUI()
+        self.assetCb.addItems(assets)
+        print ' > Set asset to: ' + os.getenv('AST')
+
         if os.getenv('AST') == 'None':
-            self.assetCb.clear()
-            type = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'))
-            assets = []
-
-            for i in os.listdir(type):
-                path = os.path.join(type, i)
-                if os.path.isdir(path):
-                    assets.append(i)
-
-            self.assetCb.addItems(assets)
             os.environ['AST'] = self.assetCb.currentText()
 
-            workspaceFolder = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'), os.getenv('AST'))
+            workspaceFolder = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'),
+                                           os.getenv('AST'))
             normalizedPath = workspaceFolder.replace('\\', '/')
             mel.eval('setProject \"' + normalizedPath + '\"')
 
-            self.assetCb.currentTextChanged.connect(self.updateAssetUI)
             self.populate()
+
         else:
-            self.assetCb.clear()
-            type = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'))
-            assets = []
-
-            for i in os.listdir(type):
-                path = os.path.join(type, i)
-                if os.path.isdir(path):
-                    assets.append(i)
-
-            self.assetCb.addItems(assets)
             self.assetCb.setCurrentText(os.getenv('AST'))
-            os.environ['AST'] = self.assetCb.currentText()
 
-            workspaceFolder = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'), os.getenv('AST'))
+            workspaceFolder = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'),
+                                           os.getenv('AST'))
             normalizedPath = workspaceFolder.replace('\\', '/')
             mel.eval('setProject \"' + normalizedPath + '\"')
 
-            self.assetCb.currentTextChanged.connect(self.updateAssetUI)
             self.populate()
+
+        self.assetCb.currentTextChanged.connect(self.updateAssetUI)
 
     def updateAssetUI(self):
         os.environ['AST'] = self.assetCb.currentText()
+        print ' > Updated asset to: ' + os.getenv('AST')
+
+        workspaceFolder = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'),
+                                       os.getenv('AST'))
+        normalizedPath = workspaceFolder.replace('\\', '/')
+        mel.eval('setProject \"' + normalizedPath + '\"')
+
         self.populate()
 
-    def getVersionDir(self):
-        versionDir = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'), os.getenv('AST'),'version')
-        return versionDir
+    def getDirectory(self):
+        directory = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'), os.getenv('AST'))
+        return directory
 
     def getMayaFiles(self):
-        mayaFiles = glob(os.path.join(self.getVersionDir(), '*.ma'))
+        path = self.getDirectory()
+        mayaFiles = glob(os.path.join(path, 'version', '*.ma'))
         return mayaFiles
 
     def populate(self):
@@ -277,14 +268,14 @@ class projectManager(QtWidgets.QDialog):
         mayaFiles = self.getMayaFiles()
 
         for i in mayaFiles:
+            print i
             file = i.split('\\')[-1]
-            name = file.split('.')[0]
-            extension = file.split('.')[-1]
+            name, ext = os.path.splitext(file)
 
             item = QtWidgets.QTableWidgetItem(name)
             item.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable)
 
-            extensionUpper = extension.upper()
+            extensionUpper = (ext.split('.')[-1]).upper()
             itemType = str(extensionUpper + ' File')
             type = QtWidgets.QTableWidgetItem(itemType)
             type.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.AlignCenter)
