@@ -139,7 +139,7 @@ class projectManager(QtWidgets.QDialog):
         else:
             self.projectCb.setCurrentText(os.getenv('PRJ'))
             self.setDepartamentUI()
-            
+
         self.projectCb.currentTextChanged.connect(self.updateProjectUI)
 
     def updateProjectUI(self):
