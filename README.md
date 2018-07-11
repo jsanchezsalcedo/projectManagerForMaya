@@ -2,7 +2,7 @@
     
   <b>Bugs</b>
   
-  When you run the script, if don't find any folder (roject, dept, type,...), the scripts gaves an error. FIXED!
+  When you run the script, if don't find any folder (project, dept, type,...), the scripts gaves an error. FIXED!
   
   <b>Updates</b>
   
