@@ -4,7 +4,7 @@
   
   Cleaned and optimized part of the code to be more readable.
   
-  <b>Issues>/b>
+  <b>Issues</b>
     
   It is still having a bug when you change of project after opening an asset of another project previously selected, this duplicates the process when you select an asset and open it. If you are always working on the same project, there is no problem.
 
