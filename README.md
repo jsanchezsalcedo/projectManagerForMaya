@@ -41,3 +41,5 @@ Thanks!
       |--+ project3Folder ('PRJ')
       |
       |
+      
+Please, include the file <i>workspace.mel</i> into <b>department</b> folder and <i>mayaAscii</i>(.ma) files into <b>version</b> folder, if not, does not work. If you want to use it with <i>default</i> scene folder, change into the script, version for scenes and it should be work.
