@@ -16,30 +16,24 @@ except ImportError:
 
 mainWindow = None
 __title__ = 'Project Manager'
-__version__ = 'v1.1.1'
-
-rootDir = 'D:\Projects'
+__version__ = 'v1.2.1'
 
 print ' '
 print ' > You have openned {} {} successfully.'.format(__title__,__version__)
+print ' > by Jorge Sanchez Salcedo (2018)'
+print ' > www.jorgesanchez-da.com'
+print ' > jorgesanchez.da@gmail.com'
 print ' '
 
 try:
-    print '   > Project: ' + os.getenv('PRJ')
-    print '   > Departament: ' + os.getenv('DPT')
-    print '   > Type: ' + os.getenv('TYP')
-    print '   > Asset: ' + os.getenv('AST')
-    print ' '
+    print ' > ' + (os.path.join(os.getenv('PRJ'), os.getenv('LVA'), os.getenv('LVB'), os.getenv('LVC'), os.getenv('DPT')))
+
 except TypeError:
     os.environ['PRJ'] = 'None'
     os.environ['DPT'] = 'None'
-    os.environ['TYP'] = 'None'
-    os.environ['AST'] = 'None'
-    print '   > Project: ' + os.getenv('PRJ')
-    print '   > Departament: ' + os.getenv('DPT')
-    print '   > Type: ' + os.getenv('TYP')
-    print '   > Asset: ' + os.getenv('AST')
-    print ' '
+    os.environ['LVA'] = 'None'
+    os.environ['LVB'] = 'None'
+    os.environ['LVC'] = 'None'
 
 def getMainWindow():
     omui.MQtUtil.mainWindow()
@@ -60,15 +54,15 @@ class projectManager(QtWidgets.QDialog):
         self.createProjectUI()
 
     def rootDir(self):
-        global rootDir
+        rootDir = 'D:\ProjectFolder'
         return rootDir
 
     def getProjects(self):
-        projectDir = self.rootDir()
+        rootDir = self.rootDir()
         projects = []
 
-        for i in os.listdir(projectDir):
-            path = os.path.join(projectDir, i)
+        for i in os.listdir(rootDir):
+            path = os.path.join(rootDir, i)
             if os.path.isdir(path):
                 projects.append(i)
 
@@ -84,25 +78,29 @@ class projectManager(QtWidgets.QDialog):
         self.rootLe = QtWidgets.QLineEdit()
         self.rootLe.setText(rootDir)
         self.rootLe.setEnabled(False)
+        self.rootBtn = QtWidgets.QPushButton('Browse')
+        self.rootBtn.setEnabled(False)
         rootLy.addWidget(self.rootLe)
+        rootLy.addWidget(self.rootBtn)
 
         projectLy = QtWidgets.QHBoxLayout()
+
         self.projectCb = QtWidgets.QComboBox()
         self.projectCb.addItems(projects)
-        self.projectCb.setCurrentText(os.getenv('PRJ'))
 
-        assetsLy = QtWidgets.QHBoxLayout()
-        self.departamentCb = QtWidgets.QComboBox()
-        self.departamentCb.setMinimumWidth(210)
-        self.departamentCb.addItems([])
+        self.departmentCb = QtWidgets.QComboBox()
+        self.departmentCb.addItems(['model', 'lookdev', 'rig', 'layout', 'anim', 'fx', 'lighting'])
 
-        self.typesCb = QtWidgets.QComboBox()
-        self.typesCb.setMinimumWidth(210)
-        self.typesCb.addItems([])
+        LevelsLy = QtWidgets.QHBoxLayout()
+        
+        self.levelACb = QtWidgets.QComboBox()
+        self.levelACb.setMinimumWidth(210)
 
-        self.assetCb = QtWidgets.QComboBox()
-        self.assetCb.setMinimumWidth(210)
-        self.assetCb.addItems([])
+        self.levelBCb = QtWidgets.QComboBox()
+        self.levelBCb.setMinimumWidth(210)
+
+        self.levelCCb = QtWidgets.QComboBox()
+        self.levelCCb.setMinimumWidth(210)
 
         filesLy = QtWidgets.QVBoxLayout()
         self.filesTableWidget = QtWidgets.QTableWidget()
@@ -118,147 +116,156 @@ class projectManager(QtWidgets.QDialog):
         self.filesTableWidget.setShowGrid(False)
 
         projectLy.addWidget(self.projectCb)
+        projectLy.addWidget(self.departmentCb)
 
-        for i in (self.departamentCb, self.typesCb, self.assetCb):
-            assetsLy.addWidget(i)
+        for i in (self.levelACb, self.levelBCb, self.levelCCb):
+            LevelsLy.addWidget(i)
 
         filesLy.addWidget(self.filesTableWidget)
 
         mainLayout.addLayout(rootLy)
         mainLayout.addLayout(projectLy)
-        mainLayout.addLayout(assetsLy)
+        mainLayout.addLayout(LevelsLy)
         mainLayout.addLayout(filesLy)
 
-        self.setLayout(mainLayout)
-        self.setProjectUI()
+        self.projectCb.currentTextChanged.connect(self.updateProject)
+        self.departmentCb.currentTextChanged.connect(self.updateDepartment)
+        self.levelACb.currentTextChanged.connect(self.updateLevelA)
+        self.levelBCb.currentTextChanged.connect(self.updateLevelB)
+        self.levelCCb.currentTextChanged.connect(self.updateLevelC)
 
-    def setProjectUI(self):
+
+        self.setLayout(mainLayout)
+        self.setProject()
+
+    def setProject(self):
         if os.getenv('PRJ') == 'None':
             os.environ['PRJ'] = self.projectCb.currentText()
-            self.setDepartamentUI()
         else:
             self.projectCb.setCurrentText(os.getenv('PRJ'))
-            self.setDepartamentUI()
 
-        self.projectCb.currentTextChanged.connect(self.updateProjectUI)
+        self.setDepartment()
 
-    def updateProjectUI(self):
+    def updateProject(self):
         os.environ['PRJ'] = self.projectCb.currentText()
-        self.setDepartamentUI()
+        self.setDepartment()
 
-    def getDepartamentUI(self):
-        self.departamentCb.clear()
-        project = os.path.join(self.rootDir(), os.getenv('PRJ'))
-        departaments = []
-
-        for i in os.listdir(project):
-            path = os.path.join(project, i)
-            if os.path.isdir(path):
-                departaments.append(i)
-
-        return departaments
-
-    def setDepartamentUI(self):
-        departaments= self.getDepartamentUI()
-        self.departamentCb.addItems(departaments)
-
+    def setDepartment(self):
         if os.getenv('DPT') == 'None':
-            os.environ['DPT'] = self.departamentCb.currentText()
-            self.setTypeUI()
+            os.environ['DPT'] = self.departmentCb.currentText()
         else:
-            self.departamentCb.setCurrentText(os.getenv('DPT'))
-            self.setTypeUI()
+            self.departmentCb.setCurrentText(os.getenv('DPT'))
 
-        self.departamentCb.currentTextChanged.connect(self.updateDepartamentUI)
+        self.setLevelA()
 
-    def updateDepartamentUI(self):
-        os.environ['DPT'] = self.departamentCb.currentText()
-        self.setTypeUI()
+    def updateDepartment(self):
+        os.environ['DPT'] = self.departmentCb.currentText()
+        self.setLevelA()
 
-    def getTypeUI(self):
-        self.typesCb.clear()
-        departament = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'))
-        types = []
+    def getLevelA(self):
+        department = os.getenv('DPT')
+        deptPrep = ['model', 'lookdev', 'rig']
 
-        for i in os.listdir(departament):
-            path = os.path.join(departament, i)
+        if department in deptPrep:
+            levelA = ['assets', 'libs']
+        else:
+            levelA = ['seqs']
+
+        return levelA
+
+    def setLevelA(self):
+        levelA = self.getLevelA()
+
+        self.levelACb.clear()
+        self.levelACb.addItems(levelA)
+
+        if os.getenv('LVA') == 'None':
+            os.environ['LVA'] = self.levelACb.currentText()
+        else:
+            self.levelACb.setCurrentText(os.getenv('LVA'))
+
+        self.setLevelB()
+
+    def updateLevelA(self):
+        os.environ['LVA'] = self.levelACb.currentText()
+        self.setLevelB()
+
+    def getLevelB(self):
+        levelB = []
+
+        levelApath = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('LVA'))
+        for i in os.listdir(levelApath):
+            path = os.path.join(levelApath, i)
             if os.path.isdir(path):
-                types.append(i)
+                levelB.append(i)
 
-        return types
+        return levelB
 
-    def setTypeUI(self):
-        types = self.getTypeUI()
-        self.typesCb.addItems(types)
+    def setLevelB(self):
+        levelB = self.getLevelB()
 
-        if os.getenv('TYP') == 'None':
-            os.environ['TYP'] = self.typesCb.currentText()
-            self.setAssetUI()
+        self.levelBCb.clear()
+        self.levelBCb.addItems(levelB)
+
+        if os.getenv('LVB') == 'None':
+            os.environ['LVB'] = self.levelBCb.currentText()
         else:
-            self.typesCb.setCurrentText(os.getenv('TYP'))
-            self.setAssetUI()
+            self.levelBCb.setCurrentText(os.getenv('LVB'))
 
-        self.typesCb.currentTextChanged.connect(self.updateTypeUI)
+        self.setLevelC()
 
-    def updateTypeUI(self):
-        os.environ['TYP'] = self.typesCb.currentText()
-        self.setAssetUI()
+    def updateLevelB(self):
+        os.environ['LVB'] = self.levelBCb.currentText()
+        self.setLevelC()
 
-    def getAssetUI(self):
-        self.assetCb.clear()
-        type = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'))
-        assets = []
+    def getLevelC(self):
+        levelC = []
 
-        for i in os.listdir(type):
-            path = os.path.join(type, i)
+        levelBpath = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('LVA'), os.getenv('LVB'))
+
+        for i in os.listdir(levelBpath):
+            path = os.path.join(levelBpath, i)
             if os.path.isdir(path):
-                assets.append(i)
+                levelC.append(i)
 
-        return assets
+        return levelC
 
-    def setAssetUI(self):
-        assets = self.getAssetUI()
-        self.assetCb.addItems(assets)
+    def setLevelC(self):
+        levelC = self.getLevelC()
 
-        if os.getenv('AST') == 'None':
-            os.environ['AST'] = self.assetCb.currentText()
+        self.levelCCb.clear()
+        self.levelCCb.addItems(levelC)
 
-            workspaceFolder = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'),
-                                           os.getenv('AST'))
-            normalizedPath = workspaceFolder.replace('\\', '/')
-            mel.eval('setProject \"' + normalizedPath + '\"')
-
-            self.populate()
-
+        if os.getenv('LVC') == 'None':
+            os.environ['LVC'] = self.levelCCb.currentText()
         else:
-            self.assetCb.setCurrentText(os.getenv('AST'))
+            self.levelCCb.setCurrentText(os.getenv('LVC'))
 
-            workspaceFolder = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'),
-                                           os.getenv('AST'))
-            normalizedPath = workspaceFolder.replace('\\', '/')
-            mel.eval('setProject \"' + normalizedPath + '\"')
+        self.setProjectFolder()
 
-            self.populate()
+    def updateLevelC(self):
+        os.environ['LVC'] = self.levelCCb.currentText()
+        self.setProjectFolder()
 
-        self.assetCb.currentTextChanged.connect(self.updateAssetUI)
+    def setProjectFolder(self):
+        self.workspaceFolder = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('LVA'), os.getenv('LVB'), os.getenv('LVC'), os.getenv('DPT'))
 
-    def updateAssetUI(self):
-        os.environ['AST'] = self.assetCb.currentText()
+        normalizedPath = self.workspaceFolder.replace('\\', '/')
 
-        workspaceFolder = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'),
-                                       os.getenv('AST'))
-        normalizedPath = workspaceFolder.replace('\\', '/')
-        mel.eval('setProject \"' + normalizedPath + '\"')
+        path = normalizedPath + '/'
+
+        try:
+            cmds.workspace(dir=path)
+            cmds.workspace(path, o=True)
+            cmds.workspace(q=True, sn=True)
+            cmds.workspace(ua=True)
+        except RuntimeError:
+            pass
 
         self.populate()
 
-    def getDirectory(self):
-        directory = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('DPT'), os.getenv('TYP'), os.getenv('AST'))
-        return directory
-
     def getMayaFiles(self):
-        path = self.getDirectory()
-        mayaFiles = glob(os.path.join(path, 'version', '*.ma'))
+        mayaFiles = glob(os.path.join(self.workspaceFolder, 'version', '*.ma'))
         return mayaFiles
 
     def populate(self):
@@ -273,9 +280,9 @@ class projectManager(QtWidgets.QDialog):
             item.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable)
 
             extensionUpper = (ext.split('.')[-1]).upper()
-            itemType = str(extensionUpper + ' File')
-            type = QtWidgets.QTableWidgetItem(itemType)
-            type.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.AlignCenter)
+            itemlevelB = str(extensionUpper + ' File')
+            levelB = QtWidgets.QTableWidgetItem(itemlevelB)
+            levelB.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.AlignCenter)
 
             getDate = time.gmtime(os.path.getmtime(i))
             itemDate = str(time.strftime('%b %d, %Y - %H:%M', getDate))
@@ -284,7 +291,7 @@ class projectManager(QtWidgets.QDialog):
 
             self.filesTableWidget.insertRow(0)
             self.filesTableWidget.setItem(0, 0, item)
-            self.filesTableWidget.setItem(0, 1, type)
+            self.filesTableWidget.setItem(0, 1, levelB)
             self.filesTableWidget.setItem(0, 2, date)
 
         self.filesTableWidget.itemDoubleClicked.connect(self.checkFileState)
@@ -318,7 +325,7 @@ class projectManager(QtWidgets.QDialog):
         currentScene = self.filesTableWidget.currentItem()
         getFileName = currentScene.text()
         sceneName = getFileName + '.ma'
-        cmds.file(sceneName, o=True, f=True)
+        cmds.file(sceneName, o=True, f=True, typ='mayaAscii', op='v=0')
         print ' '
         print ' > You have opened your scene successfully.'
         print ' '
@@ -328,7 +335,7 @@ class projectManager(QtWidgets.QDialog):
         cmds.file(s=True, f=True)
         self.openScene()
         print ' '
-        print ' > You have discard to save your scene successfully.'
+        print ' > You have saved your scene successfully.'
         print ' '
         self.close()
 
