@@ -57,20 +57,8 @@ class projectManager(QtWidgets.QDialog):
         rootDir = 'D:\ProjectFolder'
         return rootDir
 
-    def getProjects(self):
-        rootDir = self.rootDir()
-        projects = []
-
-        for i in os.listdir(rootDir):
-            path = os.path.join(rootDir, i)
-            if os.path.isdir(path):
-                projects.append(i)
-
-        return projects
-
     def createProjectUI(self):
         rootDir = self.rootDir()
-        projects = self.getProjects()
 
         mainLayout = QtWidgets.QVBoxLayout()
 
@@ -86,7 +74,6 @@ class projectManager(QtWidgets.QDialog):
         projectLy = QtWidgets.QHBoxLayout()
 
         self.projectCb = QtWidgets.QComboBox()
-        self.projectCb.addItems(projects)
 
         self.departmentCb = QtWidgets.QComboBox()
         self.departmentCb.addItems(['model', 'lookdev', 'rig', 'layout', 'anim', 'fx', 'lighting'])
@@ -138,7 +125,23 @@ class projectManager(QtWidgets.QDialog):
         self.setLayout(mainLayout)
         self.setProject()
 
+    def getProjects(self):
+        projects = []
+
+        projectsPath = os.path.join(self.rootDir())
+        for i in os.listdir(projectsPath):
+            path = os.path.join(projectsPath, i)
+            if os.path.isdir(path):
+                projects.append(i)
+
+        return projects
+
     def setProject(self):
+        projects = self.getProjects()
+
+        self.projectCb.clear()
+        self.projectCb.addItems(projects)
+
         if os.getenv('PRJ') == 'None':
             os.environ['PRJ'] = self.projectCb.currentText()
         else:
@@ -193,11 +196,15 @@ class projectManager(QtWidgets.QDialog):
     def getLevelB(self):
         levelB = []
 
-        levelApath = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('LVA'))
-        for i in os.listdir(levelApath):
-            path = os.path.join(levelApath, i)
-            if os.path.isdir(path):
-                levelB.append(i)
+        try:
+            levelApath = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('LVA'))
+            for i in os.listdir(levelApath):
+                path = os.path.join(levelApath, i)
+                if os.path.isdir(path):
+                    levelB.append(i)
+
+        except WindowsError:
+            levelB = ['None']
 
         return levelB
 
@@ -205,7 +212,10 @@ class projectManager(QtWidgets.QDialog):
         levelB = self.getLevelB()
 
         self.levelBCb.clear()
-        self.levelBCb.addItems(levelB)
+        try:
+            self.levelBCb.addItems(levelB)
+        except TypeError:
+            pass
 
         if os.getenv('LVB') == 'None':
             os.environ['LVB'] = self.levelBCb.currentText()
@@ -221,12 +231,19 @@ class projectManager(QtWidgets.QDialog):
     def getLevelC(self):
         levelC = []
 
-        levelBpath = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('LVA'), os.getenv('LVB'))
+        try:
+            levelBpath = os.path.join(self.rootDir(), os.getenv('PRJ'), os.getenv('LVA'), os.getenv('LVB'))
 
-        for i in os.listdir(levelBpath):
-            path = os.path.join(levelBpath, i)
-            if os.path.isdir(path):
-                levelC.append(i)
+            for i in os.listdir(levelBpath):
+                path = os.path.join(levelBpath, i)
+                if os.path.isdir(path):
+                    levelC.append(i)
+
+        except WindowsError:
+            levelC = ['None']
+            print ' '
+            print ' > First, you have to create the hierarchy folders.'
+            print ' '
 
         return levelC
 
@@ -234,7 +251,10 @@ class projectManager(QtWidgets.QDialog):
         levelC = self.getLevelC()
 
         self.levelCCb.clear()
-        self.levelCCb.addItems(levelC)
+        try:
+            self.levelCCb.addItems(levelC)
+        except TypeError:
+            pass
 
         if os.getenv('LVC') == 'None':
             os.environ['LVC'] = self.levelCCb.currentText()
