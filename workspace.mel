@@ -1,0 +1,17 @@
+//Maya 2018 Project Definition
+
+workspace -fr "mayaAscii" "version";
+workspace -fr "mayaBinary" "version";
+workspace -fr "scene" "version";
+workspace -fr "sceneAssembly" "version";
+workspace -fr "sourceImages" "maps";
+workspace -fr "images" "render";
+workspace -fr "iprImages" "render/tmp";
+workspace -fr "OBJexport" "cache";
+workspace -fr "OBJ" "cache";
+workspace -fr "FBX export" "cache";
+workspace -fr "FBX" "cache";
+workspace -fr "ASS Export" "cache";
+workspace -fr "ASS" "cache";
+workspace -fr "Alembic" "cache";
+workspace -fr "autoSave" "tmp";
