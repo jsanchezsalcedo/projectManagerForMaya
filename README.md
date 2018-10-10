@@ -40,6 +40,6 @@
       |
       |
       
-If you have your projects in another drive or folder different than mine, first, you must change manually <span>os.environ['ROOT'] = root = 'D:\Projects'</span> into <i>projectManager.py</i> with your root folder.
+If you have your projects in another drive or folder different than mine, first, you must change manually <i>os.environ['ROOT'] = root = 'D:\Projects'</i> into <i>projectManager.py</i> with your root folder.
 
-In a future version, I'll include a 'Browse' button to change it from the tool.   
+In a future version, I'll include a '<i>Browse</i>' button to change it from the tool.   
