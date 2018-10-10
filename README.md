@@ -1,45 +1,45 @@
-# Project Manager v1.2.1
+# Project Manager v2.0.0
 
   <b>Update</b>
   
-  Revisited, cleaned and optimized the entire code to fix some bugs.
+  Cleaned up and optimized version of this tool. 
   
   <b>Issues</b>
-    
-  NOT FIXED AT ALL!!! It is still having the bug when you change of project after opening an asset of another project previously selected, duplicates (LESS) the process (ONLY) when you open it. If you are always working on the same project, there is no problem.
+  
+  FIXED!!! Redundancy issue when you open a file after choosing another project or directory.
 
-Sorry for the inconveniences, I am learning Python at the same time I am working on this and other scripts and hope to find a fix as soon as will be possible.
+  If you have in mind the next folder structure on your project, you shouldn't have any problem working in this version.
 
-Thanks!
-
-    --+ rootDir (D:\ProjectFolder))
+    --+ root ('ROOT')(C:\Projects, D:\Projects,...)
       |
-      |--+ project1Folder ('PRJ')
+      |--+ projectFolder ('PRJ')
       |  |
-      |  |--+ levelA ('LVA')
+      |  |--+ DirectoryA ('DIR_A')        ---> ('assets', 'libs', 'seqs')
       |     |
-      |     |--+ levelB ('LVB')
+      |     |--+ DirectoryB ('DIR_B')     ---> ('props', 'sets')('seqs')
       |        |
-      |        |--+ levelC ('LVC')
+      |        |--+ DirectoryC ('DIR_C')  ---> ('prop_name')('set_name')('seq_name')
       |           |
       |           |--+ department ('DPT') ---> workspace.MEL
       |              |
-      |              |--+ version         ---> files .MA
+      |              |--+ version         ---> MA Files
       |
-      |--+ project2Folder ('PRJ')
+      |--+ projectFolder ('PRJ')
       |  |
-      |  |--+ levelA ('LVA')
+      |  |--+ DirectoryA ('DIR_A')
       |     |
-      |     |--+ levelB ('LVB')
+      |     |--+ DirectoryB ('DIR_B')
       |        |
-      |        |--+ levelC ('LVC')
+      |        |--+ DirectoryC ('DIR_C')
       |           |
-      |           |--+ department ('DPT') ---> workspace.MEL
+      |           |--+ department ('DPT')
       |              |
-      |              |--+ version         ---> files .MA
+      |              |--+ version
       |
-      |--+ project3Folder ('PRJ')
+      |--+ projectFolder
       |
       |
       
-Please, include the file <i>workspace.mel</i> into <b>department</b> folder and <i>mayaAscii</i>(.ma) files into <b>version</b> folder, if not, does not work. If you want to use it with <i>default</i> scene folder, change into the script, version for scenes and it should be work.
+If you have your projects in another drive or folder different than mine, first, you must change manually <span>os.environ['ROOT'] = root = 'D:\Projects'</span> into <i>projectManager.py</i> with your root folder.
+
+In a future version, I'll include a 'Browse' button to change it from the tool.   
