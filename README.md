@@ -1,4 +1,4 @@
-# Project Manager v2.0.0
+# Project Manager v2.0.1
 
   <b>Update</b>
   
@@ -6,7 +6,7 @@
   
   <b>Issues</b>
   
-  FIXED!!! Redundancy issue when you open a file after choosing another project or directory.
+  · Gives a RuntimeEror when you try to open a file, PMM did not find <i>workspace.mel</i> FIXED!!!
 
   If you have in mind the next folder structure on your project, you shouldn't have any problem working in this version.
 
