@@ -6,7 +6,7 @@
   
   <b>Issues</b>
   
-  · Gives a RuntimeEror when you try to open a file, PMM did not find <i>workspace.mel</i> FIXED!!!
+  · Gives RuntimeError when you try to open a file, PMM did not find <i>workspace.mel</i> FIXED!!!
 
   If you have in mind the next folder structure on your project, you shouldn't have any problem working in this version.
 
