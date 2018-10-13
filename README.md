@@ -4,13 +4,13 @@
   
   · Cleaned up and optimized version of this tool. 
   · Added more tools on <i>'projectUtilities.py'</i>:
-    <p>- Create New Version:</p>
+   <p>- Create New Version:</p>
     
         import projectUtilities
         reload(projectUtilities)
         projectUtilities.createVersion()
     
-    <p>- Publish Asset:</p>
+   <p>- Publish Asset:</p>
     
         import projectUtilities
         reload(projectUtilities)
