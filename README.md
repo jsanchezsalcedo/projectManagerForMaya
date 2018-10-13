@@ -2,8 +2,8 @@
 
   <b>Updates</b>
   
-  · Cleaned up and optimized version of this tool. 
-  · Added more tools on <i>'projectUtilities.py'</i>:
+  <p>· Cleaned up and optimized version of this tool. </p>
+  <p>· Added more tools on <i>'projectUtilities.py'</i>: </p>
    <p>- Create New Version:</p>
     
         import projectUtilities
