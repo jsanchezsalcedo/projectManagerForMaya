@@ -1,9 +1,21 @@
 # Project Manager v2.0.1
 
-  <b>Update</b>
+  <b>Updates</b>
   
-  Cleaned up and optimized version of this tool. 
-  
+  · Cleaned up and optimized version of this tool. 
+  · Added more tools on <i>'projectUtilities.py'</i>:
+    - Create New Version:
+    
+        import projectUtilities
+        reload(projectUtilities)
+        projectUtilities.createVersion()
+    
+    - Publish Asset:
+    
+        import projectUtilities
+        reload(projectUtilities)
+        projectUtilities.publishAsset()
+
   <b>Issues</b>
   
   · Gives RuntimeError when you try to open a file, PMM did not find <i>workspace.mel</i> FIXED!!!
