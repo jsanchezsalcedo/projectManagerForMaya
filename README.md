@@ -4,6 +4,13 @@
   
   <p>· Cleaned up and optimized version of this tool. </p>
   <p>· Added more tools on <i>'projectUtilities.py'</i>: </p>
+  
+   <p>- Backup Manager:</p>
+   
+        import backupManagerUI
+        reload(backupManagerUI)
+        backupManagerUI.run()
+  
    <p>- Create New Version:</p>
     
         import projectUtilities
