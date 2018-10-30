@@ -17,7 +17,7 @@ except ImportError:
 
 mainWindow = None
 __title__ = 'Project Manager'
-__version__ = 'v2.0.1'
+__version__ = 'v2.0.2'
 
 print ' '
 print ' > {} {}'.format(__title__,__version__)
@@ -35,7 +35,6 @@ for dir in directories:
         os.environ[dir] = None
 
 def getMainWindow():
-    omui.MQtUtil.mainWindow()
     ptr = omui.MQtUtil.mainWindow()
     mainWindow = wrapInstance(long(ptr), QtWidgets.QMainWindow)
     return mainWindow
@@ -248,18 +247,21 @@ class ProjectManagerUI(QtWidgets.QDialog):
     def openScene(self):
         melFiles = self.directories.melFiles()
         try:
-            currentScene = self.filesTableWidget.currentItem()
-            getFileName = currentScene.text()
-            sceneName = getFileName + '.ma'
-            cmds.file(sceneName, o=True, f=True, typ='mayaAscii', op='v=0')
-
-        except RuntimeError:
             if 'workspace.mel' not in melFiles:
                 from projectUtilities import createWorkspace
                 createWorkspace()
+                currentScene = self.filesTableWidget.currentItem()
+                getFileName = currentScene.text()
+                sceneName = getFileName + '.ma'
                 cmds.file(sceneName, o=True, f=True, typ='mayaAscii', op='v=0')
             else:
-                pass
+                currentScene = self.filesTableWidget.currentItem()
+                getFileName = currentScene.text()
+                sceneName = getFileName + '.ma'
+                cmds.file(sceneName, o=True, f=True, typ='mayaAscii', op='v=0')
+
+        except RuntimeError:
+            pass
 
         print ' '
         print ' > You have opened your scene successfully.'
