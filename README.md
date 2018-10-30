@@ -1,9 +1,8 @@
-# Project Manager v2.0.1
+# Project Manager v2.0.2
 
   <b>Updates</b>
   
-  <p>· Cleaned up and optimized version of this tool. </p>
-  <p>· Added more tools on <i>'projectUtilities.py'</i>: </p>
+  <p>· Detected and fixed a bug that do not create 'workspace.mel' file on new projects.
   
    <p>- Backup Manager:</p>
    
@@ -22,10 +21,6 @@
         import projectUtilities
         reload(projectUtilities)
         projectUtilities.publishAsset()
-
-  <b>Issues</b>
-  
-  · Gives RuntimeError when you try to open a file, PMM did not find <i>workspace.mel</i> FIXED!!!
 
   If you have in mind the next folder structure on your project, you shouldn't have any problem working in this version.
 
@@ -61,4 +56,4 @@
       
 If you have your projects in another drive or folder different than mine, first, you must change manually <i>os.environ['ROOT'] = root = 'D:\Projects'</i> into <i>projectManager.py</i> with your root folder.
 
-In a future version, I'll include a '<i>Browse</i>' button to change it from the tool.   
+I'll include a '<i>Browse</i>' button to change it from the tool in future versions.   
