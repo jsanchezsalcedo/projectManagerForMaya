@@ -1,8 +1,8 @@
-# Project Manager v2.0.2
+# Project Manager v2.2.1
 
   <b>Updates</b>
   
-  <p>· Detected and fixed a bug that do not create 'workspace.mel' file on new projects.
+  <p>· Directories order selection fixed.
   
    <p>- Backup Manager:</p>
    
