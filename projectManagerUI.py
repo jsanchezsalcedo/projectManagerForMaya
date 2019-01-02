@@ -8,7 +8,7 @@ import projectManager
 reload(projectManager)
 
 try:
-    from PySide2 import QtCore, QtWidgets
+    from PySide2 import QtCore, QtWidgets, QtGui
     from shiboken2 import wrapInstance
 
 except ImportError:
@@ -17,16 +17,16 @@ except ImportError:
 
 mainWindow = None
 __title__ = 'Project Manager'
-__version__ = 'v2.0.2'
+__version__ = 'v2.2.1'
 
 print ' '
 print ' > {} {}'.format(__title__,__version__)
-print ' > by Jorge Sanchez Salcedo (2018)'
+print ' > by Jorge Sanchez Salcedo (2019)'
 print ' > www.jorgesanchez-da.com'
 print ' > jorgesanchez.da@gmail.com'
 print ' '
 
-directories = ['PRJ', 'DPT', 'DIR_A', 'DIR_B', 'DIR_C']
+directories = ['PRJ', 'DIR_A', 'DIR_B', 'DIR_C', 'DPT']
 
 for dir in directories:
     try:
@@ -47,15 +47,15 @@ class ProjectManagerUI(QtWidgets.QDialog):
         self.setWindowFlags(QtCore.Qt.Dialog)
         self.setMinimumWidth(640)
         self.setMinimumHeight(425)
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
         self.directories = projectManager.ProjectManager()
         self.root = self.directories.projectsRoot()
         self.projects = self.directories.projectsDir()
-        self.departments = self.directories.departmentsDir()
         self.directoryA = self.directories.directoryA()
         self.directoryB = self.directories.directoryB()
         self.directoryC = self.directories.directoryC()
+        self.departments = self.directories.departmentsDir()
         self.projectPath, self.filesPath = self.directories.getProject()
 
         self.buildUI()
@@ -80,21 +80,15 @@ class ProjectManagerUI(QtWidgets.QDialog):
         self.projectCb.setCurrentText(os.getenv('PRJ'))
         self.projectCb.currentTextChanged.connect(self.updateProject)
 
-        self.departmentCb = QtWidgets.QComboBox()
-        self.departmentCb.addItems(self.departments)
-        self.departmentCb.setCurrentText(os.getenv('DPT'))
-        self.departmentCb.currentTextChanged.connect(self.updateDepartment)
-
-        for i in (self.projectCb, self.departmentCb):
-            projectLy.addWidget(i)
-
-        directoriesLy = QtWidgets.QHBoxLayout()
-
         self.directoryACB = QtWidgets.QComboBox()
-        self.directoryACB.setMinimumWidth(210)
         self.directoryACB.addItems(self.directoryA)
         self.directoryACB.setCurrentText(os.getenv('DIR_A'))
         self.directoryACB.currentTextChanged.connect(self.updateDirA)
+
+        for i in (self.projectCb, self.directoryACB):
+            projectLy.addWidget(i)
+
+        directoriesLy = QtWidgets.QHBoxLayout()
 
         self.directoryBCB = QtWidgets.QComboBox()
         self.directoryBCB.setMinimumWidth(210)
@@ -108,7 +102,13 @@ class ProjectManagerUI(QtWidgets.QDialog):
         self.directoryCCB.setCurrentText(os.getenv('DIR_C'))
         self.directoryCCB.currentTextChanged.connect(self.updateDirC)
 
-        for i in (self.directoryACB, self.directoryBCB, self.directoryCCB):
+        self.departmentCb = QtWidgets.QComboBox()
+        self.departmentCb.setMinimumWidth(210)
+        self.departmentCb.addItems(self.departments)
+        self.departmentCb.setCurrentText(os.getenv('DPT'))
+        self.departmentCb.currentTextChanged.connect(self.updateDepartment)
+
+        for i in (self.directoryBCB, self.directoryCCB, self.departmentCb):
             directoriesLy.addWidget(i)
 
         filesLy = QtWidgets.QVBoxLayout()
@@ -119,7 +119,8 @@ class ProjectManagerUI(QtWidgets.QDialog):
         self.filesTableWidget.setColumnWidth(0, 375)
         self.filesTableWidget.setColumnWidth(1, 90)
         self.filesTableWidget.setColumnWidth(2, 160)
-        self.filesTableWidget.setHorizontalHeaderLabels(['Name', 'Type', 'Date Modified'])
+        self.headerLabels = (['Name', 'Type', 'Date Modified'])
+        self.filesTableWidget.setHorizontalHeaderLabels(self.headerLabels)
 
         self.filesTableWidget.setAlternatingRowColors(True)
         self.filesTableWidget.setSortingEnabled(True)
@@ -137,15 +138,6 @@ class ProjectManagerUI(QtWidgets.QDialog):
 
     def updateProject(self):
         os.environ['PRJ'] = self.projectCb.currentText()
-        dirA = self.directories.directoryA()
-        self.directoryACB.clear()
-        try:
-            self.directoryACB.addItems(dirA)
-        except TypeError:
-            pass
-
-    def updateDepartment(self):
-        os.environ['DPT'] = self.departmentCb.currentText()
         dirA = self.directories.directoryA()
         self.directoryACB.clear()
         try:
@@ -173,6 +165,15 @@ class ProjectManagerUI(QtWidgets.QDialog):
 
     def updateDirC(self):
         os.environ['DIR_C'] = self.directoryCCB.currentText()
+        departments = self.directories.departmentsDir()
+        self.departmentCb.clear()
+        try:
+            self.departmentCb.addItems(departments)
+        except TypeError:
+            pass
+
+    def updateDepartment(self):
+        os.environ['DPT'] = self.departmentCb.currentText()
         try:
             self.setProject()
         except TypeError:
