@@ -1,59 +1,40 @@
-# Project Manager v2.2.1
+# Project Manager v3.0.0
 
   <b>Updates</b>
   
-  <p>· Directories order selection fixed.
-  
-   <p>- Backup Manager:</p>
-   
-        import backupManagerUI
-        reload(backupManagerUI)
-        backupManagerUI.run()
-  
-   <p>- Create New Version:</p>
+  <p>· Directories hierachy fixed.
+  <p>· Optimized code from previous version.
+  <p>· Fixed some internal bugs.
+  <p>· Tested on MAC OS X. 
     
-        import projectUtilities
-        reload(projectUtilities)
-        projectUtilities.createVersion()
-    
-   <p>- Publish Asset:</p>
-    
-        import projectUtilities
-        reload(projectUtilities)
-        projectUtilities.publishAsset()
-
-  If you have in mind the next folder structure on your project, you shouldn't have any problem working in this version.
+  To avoid the Project Manager does not work properly, you need to have your project folders hierarchy organized on the next way.
 
     --+ root ('ROOT')(C:\Projects, D:\Projects,...)
       |
       |--+ projectFolder ('PRJ')
       |  |
-      |  |--+ DirectoryA ('DIR_A')        ---> ('assets', 'libs', 'seqs')
+      |  |--+ Level 1 ('FLDA')        ---> ('assets', 'libs', 'seqs')
       |     |
-      |     |--+ DirectoryB ('DIR_B')     ---> ('props', 'sets')('seqs')
+      |     |--+ Level 2 ('FLDB')     ---> ('asset_name', 'set_name')('seq_name')
       |        |
-      |        |--+ DirectoryC ('DIR_C')  ---> ('prop_name')('set_name')('seq_name')
+      |        |--+ Level 3 ('FLDC')  ---> ('modeling', 'shading', 'fx')
       |           |
-      |           |--+ department ('DPT') ---> workspace.MEL
+      |           |--+ working        ---> workspace.MEL
       |              |
-      |              |--+ version         ---> MA Files
+      |              |--+ scenes      ---> MA Files
       |
       |--+ projectFolder ('PRJ')
       |  |
-      |  |--+ DirectoryA ('DIR_A')
+      |  |--+ Level 1 ('FLDA')        ---> ('assets', 'libs', 'seqs')
       |     |
-      |     |--+ DirectoryB ('DIR_B')
+      |     |--+ Level 2 ('FLDB')     ---> ('asset_name', 'set_name')('seq_name')
       |        |
-      |        |--+ DirectoryC ('DIR_C')
+      |        |--+ Level 3 ('FLDC')  ---> ('modeling', 'shading', 'fx')
       |           |
-      |           |--+ department ('DPT')
+      |           |--+ working        ---> workspace.MEL
       |              |
-      |              |--+ version
+      |              |--+ scenes      ---> MA Files
       |
       |--+ projectFolder
-      |
-      |
       
-If you have your projects in another drive or folder different than mine, first, you must change manually <i>os.environ['ROOT'] = root = 'D:\Projects'</i> into <i>projectManager.py</i> with your root folder.
-
-I'll include a '<i>Browse</i>' button to change it from the tool in future versions.   
+If you have your projects in another drive or folder different than mine, first, you must change manually <i>os.environ['ROOT'] = root = '/Users/jsanchezsalcedo/Projects'</i> into <i>prm_core.py</i> with your root folder.  
